@@ -1,0 +1,192 @@
+CREATE DATABASE HEALTHCARE;
+use HEALTHCARE;
+show tables;
+-- BASIC QUERIES
+SELECT * FROM healthcare;
+
+SELECT Name, Age, Gender, Hospital FROM healthcare;
+
+SELECT * FROM healthcare
+WHERE Age > 60;
+
+SELECT DISTINCT 'Medical-Condition' FROM healthcare;
+
+SELECT COUNT(*) AS total_patients FROM healthcare;
+
+-- AGGREGATE FUNCTIONS
+
+SELECT AVG(ROUNDED_TREATMENT_COST) AS avg_treatment_cost
+FROM healthcare;
+
+SELECT Hospital, COUNT(*) AS patient_count
+FROM healthcare
+GROUP BY Hospital;
+
+SELECT Doctor, COUNT(*) AS patient_count
+FROM healthcare
+GROUP BY Doctor;
+
+-- FILTERING & SORTING
+
+SELECT * FROM healthcare
+WHERE 'LENGTH OF STAY' > 10;
+
+SELECT * FROM healthcare
+ORDER BY 'ROUNDED TREATMENT COST' DESC
+LIMIT 10;
+
+SELECT * FROM healthcare
+ORDER BY Date_of_Admission DESC;
+
+-- DATE & TIME FUNCTIONS
+
+SELECT 
+  YEAR(Date_of_Admission) AS year,
+  MONTH(Date_of_Admission) AS month,
+  COUNT(*) AS total_admissions
+FROM healthcare
+GROUP BY YEAR(Date_of_Admission), MONTH(Date_of_Admission);
+
+SELECT YEAR(Date_of_Admission) AS year,
+COUNT(*) AS total_admissions
+FROM healthcare
+GROUP BY YEAR(Date_of_Admission);
+
+SELECT Name,
+DATEDIFF(Discharge_Date, Date_of_Admission) AS stay_days
+FROM healthcare;
+
+-- SQL CLAUSES (GROUP BY + HAVING)
+
+SELECT Hospital, AVG(ROUNDED_TREATMENT_COST) AS avg_cost
+FROM healthcare
+GROUP BY Hospital
+HAVING AVG(ROUNDED_TREATMENT_COST) > 20000;
+
+SELECT Medical_Condition, SUM(ROUNDED_TREATMENT_COST) AS total_cost
+FROM healthcare
+GROUP BY Medical_Condition
+ORDER BY total_cost DESC;
+
+SELECT Hospital, COUNT(*) AS patient_count
+FROM healthcare
+GROUP BY Hospital
+HAVING COUNT(*) > 50;
+
+-- SUBQUERIES
+
+SELECT *
+FROM healthcare
+WHERE ROUNDED_TREATMENT_COST >
+(SELECT AVG(ROUNDED_TREATMENT_COST) FROM healthcare);
+
+SELECT Doctor, COUNT(*) AS patient_count
+FROM healthcare
+GROUP BY Doctor
+HAVING COUNT(*) >
+(SELECT AVG(cnt) FROM 
+   (SELECT COUNT(*) AS cnt FROM healthcare_data GROUP BY Doctor) AS t);
+
+
+-- Disease-wise total admissions
+
+SELECT Medical_Condition, COUNT(*) AS total_admissions
+FROM healthcare_data
+GROUP BY Medical_Condition;
+
+-- Disease-wise average stay
+
+SELECT Medical_Condition, AVG(LENGTH_OF_STAY) AS avg_stay
+FROM healthcare_data
+GROUP BY Medical_Condition;
+
+-- Departments with above-average patients
+
+SELECT Hospital, COUNT(*) AS patient_count
+FROM healthcare_data
+GROUP BY Hospital
+HAVING COUNT(*) >
+(SELECT AVG(cnt) FROM (SELECT COUNT(*) cnt FROM healthcare_data GROUP BY Hospital) t);
+
+-- Month-wise admissions
+
+SELECT MONTH(Date_of_Admission) AS month, COUNT(*) AS total
+FROM healthcare_data
+GROUP BY MONTH(Date_of_Admission);
+
+-- Patients with stay above average
+
+SELECT *
+FROM healthcare_data
+WHERE LENGTH_OF_STAY >
+(SELECT AVG(LENGTH_OF_STAY) FROM healthcare_data);
+
+-- Department-wise gender count
+
+SELECT Hospital, Gender, COUNT(*) AS total
+FROM healthcare_data
+GROUP BY Hospital, Gender;
+
+-- Patients discharged within 3 days
+
+SELECT *
+FROM healthcare_data
+WHERE LENGTH_OF_STAY <= 3;
+
+-- Top 3 diseases by admissions
+
+SELECT Medical_Condition, COUNT(*) AS total
+FROM healthcare_data
+GROUP BY Medical_Condition
+ORDER BY total DESC
+LIMIT 3;
+
+-- Diseases with high treatment cost
+
+SELECT Medical_Condition, AVG(ROUNDED_TREATMENT_COST) AS avg_cost
+FROM healthcare_data
+GROUP BY Medical_Condition
+HAVING AVG(ROUNDED_TREATMENT_COST) > 25000;
+
+-- Disease with highest stay variability
+
+SELECT Medical_Condition, STDDEV(LENGTH_OF_STAY) AS stay_variation
+FROM healthcare_data
+GROUP BY Medical_Condition
+ORDER BY stay_variation DESC
+LIMIT 1;
+
+SELECT Gender, COUNT(*) FROM healthcare_data GROUP BY Gender;
+
+SELECT MAX(ROUNDED_TREATMENT_COST) FROM healthcare_data;
+
+SELECT MIN(ROUNDED_TREATMENT_COST) FROM healthcare_data;
+
+SELECT * FROM healthcare_data
+ORDER BY Age DESC
+LIMIT 1;
+
+SELECT * FROM healthcare_data
+ORDER BY Age ASC
+LIMIT 1;
+
+SELECT SUM(ROUNDED_TREATMENT_COST) AS total_cost
+FROM healthcare_data;
+
+SELECT * FROM healthcare_data
+WHERE YEAR(Date_of_Admission) = 2023;
+
+SELECT * FROM healthcare_data
+WHERE Admission_Type = 'ICU';
+
+SELECT * FROM healthcare_data
+WHERE Medical_Condition = 'Diabetes';
+
+SELECT Doctor, AVG(LENGTH_OF_STAY) AS avg_stay
+FROM healthcare_data
+GROUP BY Doctor;
+
+DROP DATABASE HEALTHCARE;
+
+
+
