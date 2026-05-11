@@ -6,11 +6,6 @@ This project analyzes healthcare datasets to uncover insights on patient demogra
 ## 📌 Project Overview
 This project focuses on analyzing healthcare patient data using Microsoft Excel and SQL to extract meaningful insights related to patient admissions, treatment costs, hospital performance, and disease trends.
 
-## 👨‍🎓 Student Details
-- **Name:** SUJITH.P  
-- **Department:** BSc IT (Data Science)  
-- **Register Number:** RCAS2024BIT154  
-- **Branch:** R-SMART PRO  
 
 ## 📂 Dataset Details
 - **Rows:** 54,966  
